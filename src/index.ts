@@ -2,6 +2,7 @@
 import * as Figma from './figmaTypes';
 export * from './figmaTypes';
 import axios, { AxiosInstance, AxiosPromise } from 'axios';
+const HttpsProxyAgent = require("https-proxy-agent");
 
 export interface FileParams {
   /**
@@ -300,10 +301,21 @@ export const Client = (opts: ClientOptions): ClientInterface => {
         'X-Figma-Token': opts.personalAccessToken,
       };
 
-  const client = axios.create({
-    baseURL: `https://${opts.apiRoot || 'api.figma.com'}/v1/`,
-    headers,
-  });
+  let client;
+  if (!!process.env.https_proxy) {
+    client = axios.create({
+      baseURL: `https://${opts.apiRoot || 'api.figma.com'}/v1/`,
+      headers,
+      proxy: false,
+      httpsAgent: new HttpsProxyAgent(process.env.https_proxy),
+    });
+  } else {
+    client = axios.create({
+      baseURL: `https://${opts.apiRoot || 'api.figma.com'}/v1/`,
+      headers,
+    });
+  }
+
 
   return {
     client,
