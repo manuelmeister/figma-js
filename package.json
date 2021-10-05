@@ -1,6 +1,6 @@
 {
   "name": "proxy-figma-js",
-  "version": "1.14.0",
+  "version": "1.14.1",
   "description": "A simple wrapper for the Figma API",
   "main": "build/main/index.js",
   "types": "build/main/index.d.ts",
