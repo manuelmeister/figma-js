@@ -92,7 +92,7 @@ export type NodeType =
   | 'FRAME'
   | 'GROUP'
   | 'VECTOR'
-  | 'BOOLEAN'
+  | 'BOOLEAN_OPERATION'
   | 'STAR'
   | 'LINE'
   | 'ELLIPSE'
@@ -109,7 +109,7 @@ export type Node =
   | Frame
   | Group
   | Vector
-  | BooleanGroup
+  | BooleanOperation
   | Star
   | Line
   | Ellipse
@@ -258,6 +258,42 @@ export interface FrameBase extends Global {
    * or an automatic length (determined by the layout engine).
    * This property is only applicable for auto-layout frames
    * @default AUTO
+   */
+  readonly primaryAxisSizingMode?: 'FIXED' | 'AUTO';
+  /**
+   * When autolayout is enabled
+   */
+  readonly primaryAxisAlignItems?: 'MIN' | 'CENTER' | 'MAX' | 'SPACE_BETWEEN';
+  /**
+   * When autolayout is enabled
+   */
+  readonly counterAxisAlignItems?: 'MIN' | 'CENTER' | 'MAX';
+  /**
+   * When autolayout is enabled
+   */
+  readonly paddingLeft?: number;
+  /**
+   * The padding betweeen the left border of the frame and its children.
+   * This property is only applicable for auto-layout frames.
+   * @default 0
+   */
+  readonly paddingRight?: number;
+  /**
+   * The padding betweeen the right border of the frame and its children.
+   * This property is only applicable for auto-layout frames.
+   * @default 0
+   */
+  readonly paddingTop?: number;
+  /**
+   * The padding betweeen the top border of the frame and its children.
+   * This property is only applicable for auto-layout frames.
+   * @default 0
+   */
+  readonly paddingBottom?: number;
+  /**
+   * The padding betweeen the bottom border of the frame and its children.
+   * This property is only applicable for auto-layout frames.
+   * @default 0
    */
   readonly counterAxisSizingMode?: 'FIXED' | 'AUTO';
   /**
@@ -436,8 +472,8 @@ export interface Vector extends VectorBase {
 }
 
 /** A group that has a boolean operation applied to it */
-export interface BooleanGroup extends VectorBase {
-  readonly type: 'BOOLEAN';
+export interface BooleanOperation extends VectorBase {
+  readonly type: 'BOOLEAN_OPERATION';
   /**
    * A string enum with value of "UNION", "INTERSECT", "SUBTRACT", or "EXCLUDE"
    * indicating the type of boolean operation applied
@@ -993,6 +1029,12 @@ export interface ComponentResponse {
   readonly meta: FullComponentMetadata;
 }
 
+export interface ComponentSetResponse {
+  readonly error: boolean;
+  readonly status: number;
+  readonly meta: FullComponentMetadata;
+}
+
 export interface StyleResponse {
   readonly error: boolean;
   readonly status: number;
@@ -1017,10 +1059,8 @@ export interface ProjectFilesResponse {
 }
 
 interface PaginationMeta {
-  readonly cursor: {
-    readonly before: number;
-    readonly after: number;
-  };
+  readonly before: number;
+  readonly after: number;
 }
 
 export interface TeamComponentsResponse {
@@ -1037,6 +1077,23 @@ export interface FileComponentsResponse {
   readonly status: number;
   readonly meta: {
     readonly components: ReadonlyArray<FullComponentMetadata>;
+  };
+}
+
+export interface TeamComponentSetsResponse {
+  readonly error: boolean;
+  readonly status: number;
+  readonly meta: {
+    readonly component_sets: ReadonlyArray<FullComponentMetadata>;
+    readonly cursor: PaginationMeta;
+  };
+}
+
+export interface FileComponentSetsResponse {
+  readonly error: boolean;
+  readonly status: number;
+  readonly meta: {
+    readonly component_sets: ReadonlyArray<FullComponentMetadata>;
   };
 }
 
